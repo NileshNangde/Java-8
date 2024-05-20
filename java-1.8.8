@@ -1,0 +1,1367 @@
+
+       Imp notes
+       ##########
+
+
+        How to convert one object int another object =>  using ObjectMapper class  or we can do this using BeansUtils
+
+         1)use ObjectMapper class
+         ========================
+
+             ModelMapper mapper = new ModelMapper();
+
+             UserDto userDto = mapper.map(userEntity, UserDto.class);
+
+             // but note dto class properties and entity class properties name should be same
+
+             ex : private String email  - in dto class
+
+             private String email  - in entity class
+
+
+
+        2) using BeansUtils
+        ===================
+
+        UserDto dto=new UserDto();
+
+        BeanUtils.copyProperties(userEntity, dto); 
+
+
+
+
+
+######################
+Java 8 or 1.8 Features   release in 2014
+######################
+
+
+Note : 80 % of Interview Q ask in Java 8 only to solve the logical program
+#########################################################################
+
+
+Java 1.8 is hot in market  | latest 22 version but they need time 
+=================================================================================================
+
+Note: upto Java 1.7 Java is only OOP but from 1.8v Java is Functional oriented also
+
+Main Objective of 1.8 
+=========================
+- Simplify Java Prgramming 
+
+- Enable Functional Programming
+
+- Write more readable and consice code
+
+
+
+
+Java 1.8 Features
+##################
+
+1) Interface changes
+   1: Default Methods
+   2: Static Methods
+
+2) Functional Interface
+   1: Predicate
+   2: Consumer
+   3: Supplier
+   4: Function
+
+3) Lambda Expression
+
+4) Method Refrence and Constructor Refrences
+
+5) Stream Api    MMMMIMP ***** for Experience
+     After data store in collection then to process the data we use Stream API
+
+6) Optional class ( to avoid null point exception because null point exception is very comman )
+
+7) Spliterator ( special iterator)
+
+8) StringJoiner
+
+9) Collection FrameWork changes
+
+10) Date and Time api
+
+
+
+
+
+Interface Change    : interface means it provide logic for the method
+################
+
+ -> Interface means collection of abstract methods.
+
+     Note: Abstract method means method which does not contain any
+           body is called abstract method
+
+ -> A class can implement interface
+
+ -> When a class is implementing interface then it is mandatory that the class should be
+    implements all methods of the interface . other wise class cannot compile.
+
+ -> upto this there is no problem.
+
+ -> what if after project development I want to add new method in the interface , then that method
+    is also  manditory to override in that class , this affect the class to fail compile.
+
+ -> to avoid this problem java 8 introduce default method and static method are came in picture in java 8v.
+
+ -> A Interface can contain concrete method , this can be default or concrete method.
+
+ -> what is diff bet default method and concrete method 
+     - default method can override 
+     - static method cannot override  // this is only the diff.
+
+   Default Method 
+   ===============
+
+ -> interface Vehicel{
+
+    public void start();   // this is abstract method 
+
+    public default void clean(){       // this is default method with body , can possible after java 1.8 , no need to 
+                                          override ,directly call in impl class
+    S.o.p.l(" clean");                 // this comcept is called backward compatibility
+ 
+    }
+
+ }
+
+ -> Default method can override  , for our implementation , but only for default method,
+
+ -> How to call default method - by creating object of class and call
+
+   Static method
+   ============
+
+   public static void clean(){     // same as default method but cannot be override
+    sopln(""); 
+   }
+
+   -> how to call static method - by using interface name
+     Vehicle.clean();
+
+
+
+
+Use case
+==========
+
+  forEach()  - introduce in Iterable<> Interface in 1.8
+             - default method
+   
+  splIterable()  - default method
+
+
+=> When to go for default method and when to go for static method interface ?
+   When you want to overide the defination of in impl class then go for defautl method .
+   or else Static method
+
+
+=> Multiple default method , multiple static method in interface - no problem
+
+
+
+
+
+
+Lambda Expression
+#################
+
+-> Introduce in java 1.8v
+-> Java is called as OOP language , Everything will be represent using Classes and object .
+-> From 1.8v onwards Java is also called as Functional Programming Language.
+
+-> In OOP Language Classes and object are main entities . we need to write methods inside the class only.
+
+-> Functional Programming means everything will be represent in the form of functions .
+   Functions can exist outside of the class . 
+   Function can be stored into a refrence variable . 
+   A function can be passes as a parameter to other methods.
+
+-> Lambda Expression introduced in java to enable Functional Programming.
+
+-> Lambda function is store in variable , that variable belongs from Functional Interface
+
+
+
+What is Lambda
+##############
+
+-> Lambda is an anonymous function ( means function without name)
+        -No Name 
+        -No Modifier
+        -No Return Type
+
+        () -> {} 
+
+        () method 
+        -> arrow bind () and {}
+        {} body
+-> Ex:
+   1)
+     public void m1(){       
+     sop("hi");
+     }
+
+     In Lambda
+       () -> sop("hi");
+
+    2) 
+    public void add(int a , int b){
+     sop( a+b);
+    }
+
+    (a,b) -> {sop(a+b)}; 
+    or 
+    (a+b) -> sop(a+b)   // if only one line in body then {} are optional 
+
+    3) public int getLength(String name){
+        return name.length();
+    }
+
+      (name) -> {return name.length()};
+      or
+       (name) -> name.length();
+       or
+       name -> name.length();
+
+    4) public Double getEmpSalary(Employee emp){
+       return emp.getSalary();
+    }
+
+       (Employee emp) -> emp.getSalary();
+       (emp) -> emp.getSalary()
+       emp -> emp.getSalary();
+
+
+
+   Q) How to call the Lambda function -
+   =======================================
+
+     => Using Functional Interface  , because Lambda is anonymous function
+
+
+
+
+  Functional Interface
+  #####################
+
+   -> The interface which contains only one abstract method is called as Functional interace
+
+   -> Functional interface are used to invoke lambda expressions.
+
+   -> Below are some predefine functional interfaces
+
+       Runnable -----------> run() method
+
+       Callable-------------> call() method
+
+       Comparable-----------> compareTo()
+
+   -> How to represent our interface as Functional Interface
+      Using @FunctionalInterface annotation 
+
+   ->Note: When we write @FunctionalInterface annotation then compiler check interface contains only one abstract method or not
+
+   -> we can write any number of static or default method in functional interface
+      but only one abstract method
+
+   -> In java 8 several predefine Functional Interface got Introduce
+       1) Predicate  // use for condition cheking 
+       2) Consumer
+       3) Supplier
+       4) Function
+        
+
+       1) Predicate    --> takes 1 input value
+       2) Bi-Predicate --> takes  2 input values
+       3) Consumer
+       4) Bi-Consumer
+       5) Supplier
+       6) 
+       7) Function
+       8) Bi-Function
+
+
+       **********************************************************************************
+
+       Predicate ---------> Takes Input               -------> returns  true or false  => test() as abstract method
+
+       Supplier ----------> will not take any input   -------> returns output => get() as abstract method
+
+       Consumer ----------> will take input           -------> will not return anything => accept() as abstract method
+
+       Function ----------> will take input           -------> will return output  => apply() as abstract method
+
+       ********************************************************************************
+
+
+
+
+        Q) Can we store method into variable in java - NO
+        Q) Can we store lambda into variable - yes
+
+       Note : all this interfaces are provided in java.util.function package
+
+    -> Ex:
+       1) 
+
+       @FunctionalInterface
+       public interface MyInterface{
+
+       public void m1();      // C.E
+       public void m2();
+
+       }  
+        2)
+
+        @FunctionalInterface
+       public interface MyInterface{
+
+                                          //C.E
+       }  
+        3)
+
+        @FunctionalInterface
+       public interface Parent{
+       public void m2();
+       }
+
+        @FunctionalInterface
+       public interface Child extends Parent{
+       }    
+
+        4) 
+
+       @FunctionalInterface
+       public interface Parent{
+       public void m1();
+       }
+
+        @FunctionalInterface                   //C.E
+       public interface Child extends Parent{
+        public void m2();
+       }  
+
+       5)
+         @FunctionalInterface
+       public interface Parent{
+       public void m1();
+       }
+
+                                           // valid because child not functional interface
+       public interface Child extends Parent{
+        public void m2();
+        public void m3();
+       }  
+
+
+
+
+       old fashion of programming
+       ==========================
+
+       interface MyInterfaceOne{
+       public void m1();
+       }
+
+       public class MyAppOne implements MyInterfaceOne{
+        public void m1(){
+        sopln("m1 method called");
+        }
+        public static void main(String[] args){
+          MyAppOne ma1= new MyAppOne();
+          ma1.m1();
+        }
+       }
+
+
+       New Fashion of programming
+       ===============================
+       @FunctionalInterface
+       interface MyInterfaceTwo{
+       public void m2();
+       }
+
+       public class MyAppOne implements MyInterfaceOne{
+
+          public static void main(String[] args){
+          MyInterfaceTwo mi2=() -> Sopln("M2 method calles");
+          mi2.m2();
+        }                
+        
+        }
+        
+       
+      1) Predicate
+      ==============
+      -> It is predefine Functional Interface 
+
+      -> It is used to check condition and return true or false value.
+
+
+      public class PredicateDemo{
+
+       public static void main(String[] args){
+
+       Predicate<Integer> p= i -> i>10;  // here no need to write seperate interface
+                                         // allready Predicate is one predefine interface
+       sopln(p.test(5));                 // test is only method in Predicate Interface to check the value either true or false
+       sopln(p.test(15));    here lambada is calles when test method call               
+       }
+
+      }
+
+      output : true
+
+
+      BiPredicate
+    ##############
+
+         public class PredicateDemo{
+
+             public static void main(String[] args){
+
+             BiPredicate<Integer , Integer > bip= (i,j,k) -> (i+j+k)>=20;  
+             sopln(bip.test(5,2,3));                 
+             sopln(p.test(3,4,5));             
+             }
+
+        }
+
+
+
+
+    Task : Declare names in an array and print names which are starting with "A" using lambda expression.
+    ===============================================================================================
+
+      String[] names = {"Anushka" , "Anupama" ,"Deepika" , "Kajol", " Sunny"};
+
+
+      public class PredicateDemo2{
+       String[] names = {"Anushka" , "Anupama" ,"Deepika" , "Kajol", " Sunny"};
+      Predicate<String> p= name -> name.charAt(0)=="A";
+
+      for(String name :names){
+      if(p.test(name)){
+      sopln(name);
+      }
+      }
+
+      }
+
+
+    Task : Take list of person and print persons whose age is >= 18 using lambda expression
+    ============================================================================================
+
+    class Person {
+       String name;
+       int age ;
+
+       Person(String name , int age){
+       this.name=name;
+       this,age=age;
+       }
+
+
+     public class PredicatePersonDemo{
+
+           public static void main(String[] args){
+
+           Person p1 = new Person( " Nilesh" , 26);
+           Person p2 = new Person( " Raju" , 26);
+           Person p3 = new Person( " Rekha" , 30);
+           Person p4 = new Person( " Shreyansh" , 8);
+
+           List<Person> persons = Arrays.asList(p1 , p2 ,p3 ,p4);
+           Predicate<Person> predicate =p -> {p.age>=18} // predicate is used to call the lambda
+                                                         // p is person object
+           for( Person person : persons){  // persons is collection
+             if(predicate.test(person)){    // predicate.test() call the lambda
+             system.out.println(person.name);
+             }
+           }
+
+           }
+
+
+     }
+       OutPut: Nilesh , Raju , Rekha
+
+
+      
+       ##################
+       Predicate Joining   [ Means how to join 2 predicate]
+       ##################
+
+       - To combine multiple predicate we will use  Predicate Joining
+
+       - To combine multiple predicate we use and() and or() methods
+
+
+        Task: Print emp names who are working in HYD location in DB team
+        ===============================================================
+        
+             class Employee{
+                String name;
+                String location;
+                String dept;
+
+                 public Employee(String name , String location , String dept){
+                     this.name= name;
+                     this.location = location;
+                     this.dept = dept;
+                 }
+             }
+
+             public class PredicateDemo{
+
+                 public static void main(String[] args){
+                     Employee e1 = new Employess("Raju" , "Chennai" , "Devops" );
+                     Employee e2 = new Employess("Rani" , "Pune" , "Networking" );
+                     Employee e3 = new Employess("Ashok" , "Hyd" , "DB" );
+                     Employee e4 = new Employess("Ganesh" , "Hyd" , "Testing" );
+
+
+                     List<Employee> emps = Array.asList(e1,e2,e3,e4);
+
+                    Predicate<Employee> p1= (e) -> e.location.equals("Hyd");
+                    Predicate<Employee> p2 = (e) -> e.dept.equals("DB");
+
+                    //or
+                    //Predicate<Employee> p3 = (e) -> e.name.startsWith("A");
+
+
+                    Predicate<Employee> p = p1.and(p2);
+                    //Predicate<Employee> p = p1.and(p2).and(p3);
+
+                    for(Employee e :emps){
+                    if(p.test(e)){
+                    sysout(e.name);
+                    }
+                    }
+
+
+                 }
+             }
+
+        ################################
+          Supplier Functional Interface
+        ################################
+
+
+        - Supplier is a predefine functional interface introduced in java 1.8v
+        - It contains only abstract method that is get() method
+        - Supplier interface will not take any input , it will only returns the value.
+
+        Ex: OTP Generation
+
+        public calss SupplierDemo{
+            public static void main(String[] args){
+
+
+
+             Supplier<String> s = () -> {
+             String otp ="";
+             for(int i = 1 ; i<=6 ; i++){
+             otp = otp + (int)(Math.random()*10);
+             }
+             return otp;
+             }
+            };
+
+            sysout(s.get());   =>804532
+            sysout(s.get());
+            sysout(s.get());
+            sysout(s.get());
+        }
+
+
+         #############################
+         Consumer Functional Interface
+         #############################  
+
+         - Consumer is predefine functional interface.
+         - It contains one abstract method i.e accept(T t).( t means input)
+         - Consumer will accept input but it won't return anything.
+         - Note: In java 8 forEach() method got introduce . 
+                 forEach( Consumer consumer) will take Consumer as a parameter
+
+
+         Ex:
+
+         public class ConsumerDemo{
+
+             public static void mian(String[] args){
+                Consumer<String> c = (name) -> sysout(name + ", Good Evening");
+
+                c.accept("Ashok");
+                c.accept("Ashok");
+                c.accept("Ashok");
+                c.accept("Ashok");
+             }
+         }
+
+        Output: Ashok , Good Evening
+
+
+        ###############################
+        Functional Functional Interface
+        ###############################
+
+        - Function is predefine functional interface
+
+        - FUnction interface having one abstract metod i.e applay(T r) --> (t means input r means return)
+
+        -  Interface Function<R , T>{
+              R apply(T t );
+        }
+
+        - It takes input and returns output
+
+
+
+        Retrive student record based on student id and return that record
+        =================================================================
+
+        Ex: 
+        public class FunctionDemo{
+
+               public static void main(String[] args){
+
+                   Function<String , Integer> f = (name) -> name.length();
+                   // String take input , Integer to store output data , because lambda is 
+                      returning integer value
+
+                   System.out.println(f.apply("ashokit"));   ==> output 7
+               }
+        }
+
+
+
+
+
+        Task: Take 2 inputs and perform some of two inputs and return output
+        ======================================================================
+
+
+           BiPredicate<Integer , Integer , Intefer> bip = (a,b) -> a+b;
+           // in generic 2 integer represent taking input and 3rd input represent output
+
+           Susout( bip.apply(10,20) );
+         
+
+
+
+
+       ##########################################
+       Method References  and Constructor Refrence   [::] means method refrence
+       ############################################
+
+       Note: Method References  and Constructor Refrence are short form of lambda
+
+
+       -> Method refrence means refrence to one method from another method
+
+       -> Insted of lambda to call method we use method refrence which is act as more short cut than lambda and simplify the code more in short format
+
+       -> Note : how much code you simplify , then more fast execution of application is possible
+
+
+       -> Method refrence is the Short form of lambda
+
+       -> There are three ways of refrence
+          1) Static method refrence 
+          2) Instance method refrence
+          3) Constructor refrence
+
+
+          Static method refrence Example
+          ##############################
+
+          old technique to refer the static method
+          ============================================
+
+          interface MyInterface{
+              public void m1();
+          }
+
+          public class MethodRef{
+              public static void m2(){
+                  Sysout("This is m2() ");
+              }
+              public static void main(String[] args){
+
+              MethodRef.m2() ;    // here static method directly called by class
+                                     refrence name
+              }
+          }
+
+
+          new technique to refer the static method
+          ============================================
+
+            
+            interface MyInterface{
+              public void m1();
+          }
+
+          public class MethodRef{
+              public static void m2(){
+                  Sysout("This is m2() ");
+              }
+              public static void main(String[] args){
+
+              MyInterface m =  MethodRef::m2();   // here through m2 method refrence 
+                                                     we can call m1() method and keeping it into interface
+               Early we use inteface to store lambda , now we use it for to store 
+               method refrence
+
+              m.m1();   // here output this is m2()   why 
+              }
+          }
+
+
+              here output this is m2() why 
+              ==============================
+
+             => because method defination available in m2 method that's why
+
+
+
+             In above program early what we do
+             =============================== 
+
+             for this
+             MyInterface m =  MethodRef::m2(); 
+
+              we do like this 
+
+              MyInterface m = () -> Sysout("hi");
+              mi.m1();
+              => outPut is "hi"
+
+              and define interface as @FunctionalInterface
+
+
+
+
+            Instance Method Refrence Example
+            #################################
+
+
+            public class InstanceMEthodREf{
+
+                public void m1(){
+                  for(int i=1 ; i<=5 ; i++){
+                  Sysout(i);
+
+                  }
+                }
+
+                public static void main(String[] args){
+
+                 InstanceMethodRef im = new InstanceMethodREf();
+
+                 Runnable r = im::m1();
+                 Thread t = new Thread(r);
+
+                 t.start();
+                }
+            }
+
+
+           Constructor REfrence
+           #####################
+
+          public class Test{
+
+               public static void main(String[] args){
+
+    old technique--->  Doctor d = new Doctor();   // output Doctor comstructor
+    new technique---> Doctor::new;                // output Doctor comstructor
+
+         But here this Doctor::new is refering so we need to store
+         Supplier<Doctor> s = Doctor::new;
+         sysout(s.get().hashcode());
+             }
+
+          }
+
+          class Doctor{
+
+              public Doctor(){
+                   Sysout("Doctor comstructor");
+              }
+          }
+          
+
+       Q) WAJP to print number from 1 to 5 using Thread with the help of Runnable interface
+
+   Approch 1   - By providing Runnable implementation
+   ##########
+         
+         public class ThreadDemo implements Runnable {
+           @Override
+           public void run(){
+              for( int i = 1; i<=5 ; i++){
+                 Sysout(i);
+              }
+           }
+
+           public static void main(String[] args){
+
+              ThreadDemo td = new ThreadDemo();
+
+              thread t= new Thread(td);
+              t.start();
+           }
+         }
+
+         output : 12345
+
+
+
+
+     Approch 2  By implenting anynamous implementaion
+     #########
+
+
+         public class ThreadDemo{
+
+           public static void main(String[] args){
+
+              Runnable r = new Runnable(){         //this is called anonymous implementation in java
+              @Override                            // because Runnable r = new Runnable(); not like this
+              public void run(){
+              for( int i = 1; i<=5 ; i++){
+                 Sysout(i);
+              }
+
+            }
+           
+           };
+
+              thread t= new Thread(td);
+              t.start();
+           }
+         }
+
+         output : 12345
+
+
+
+      Approch 3  - Using Lambda Expressin
+      ##########
+
+
+          public class ThreadDemo{
+
+           public static void main(String[] args){
+              Runnable r = () -> {                  // lambda expressin directly store in Runnable which is act as function interface variable
+                 for( int i = 1; i<=5 ; i++){
+                 Sysout(i);
+                };
+
+              }
+              
+                 thread t= new Thread(td);    Runnable object is passes into Thread()
+                 t.start();                   and then start()
+                                              this start() called Thread and Thread called Runnable
+           }
+
+           }
+        }
+
+        ****Note*****
+        -----------
+          People will follow third approch because less code
+
+
+
+
+       Task  : WAJP to store numbers in ArrayList and sort numbers in desending order using using ArrayList
+       ###################################################################################################
+
+         Approch 1 :   Without lambda
+         ###########################
+
+
+         public class NumbersSort1{
+
+             public static void main(String [] args){
+                 ArrayList<Integer> al = new ArrayList<>();
+                 al.add(5);
+                 al.add(2);
+                 al.add(4);
+                 al.add(1);
+                 al.add(3);
+                 Sysout(al " before sort");
+
+                 Collections.sort(al , new NumberComparator());
+                 sysout (al + " After sort")
+             }
+         }
+
+         class NumberComparator implements Comparator<Integer>{
+
+               @Override
+               public int compare (Integer i , integer j){
+
+                  if(i>j){         //  if i>j dont do any swaping
+                     return -1;     // -1 means dont shift
+                  }else if(i<j){   // if i<j   do swaping
+                     return 1; 
+                  }
+                  else{
+                  return 0;
+                  }
+
+               }
+         }
+
+
+
+        Approch 1 :   With lambda
+        ###########################
+
+
+        public class NumbersSort1{
+
+        public static void main(String [] args){
+                 ArrayList<Integer> al = new ArrayList<>();
+                 al.add(5);
+                 al.add(2);
+                 al.add(4);
+                 al.add(1);
+                 al.add(3);
+                 Sysout(al " before sort");
+
+                 Collections.sort(al , (i,j) -> i.compareTo(j)); // assending sorting
+                 
+                 Collections,sort(al , (i,j) -> ((i > j) ? -1 : 1 );   //Decending sorting
+                                            //      ternory operator 
+                                            //    10>2 ? "hi" : "hello"
+
+                 Sysout( al )
+             }
+         }
+
+
+         forEach(Consumer c) method :  Consumer not return anything
+         ##########################
+
+         -> iterator to iterate collections
+         -> forEach() method introduced in java 1.8
+
+         -> forEach() method added in iterable interface
+
+         -> forEach() method is a default method (it is having body) no need to override
+
+         -> this method is used to access each element of the  collection
+
+
+         al.forEach( i -> Sysout(i))  --> iterate all collections object in single line only
+
+
+        ###############
+         String Joiner   - used to join the strings with specific delimeteroror join string with  prefix and suffix also
+         ###############
+
+         -> java.util.StringJoiner  class introduced in java 8 v
+
+         -> it is used to join more than one String with specific delimeter
+            Ashok-it-java here (- ) is delimeter and pass as parameter while creating an object of StringJoiner
+            StringJoiner sj = new StringJoiner("-");
+
+         -> We can concat prefix and suffix while joining strings using StringJoiner
+
+
+           public class StringJoiner{
+
+              public static void main(String[] args){
+
+               StringJoiner sj = new StringJoiner("-"); // using delimeter
+               sj.add("ashok");
+               sj.add("it");
+               sj.add("java");
+
+               sysout(sj);    // ashok-it-java
+
+
+               StringJoiner sj2 = new StringJoiner("-" , "(" , ")");
+               sj2.add("ashok");
+               sj2.add("it");
+               sj2.add("java");
+
+               sysout(sj2);   // (Ashok-it-java)
+
+
+
+
+
+              }
+           }
+
+
+           
+        
+           ##############
+           Optional Class   ********* MIP ********
+           ##############
+
+           ##optional means data may available , data may not available
+
+           ## if we dont use Optinal class , then we get data directly to perform operationa
+
+           ##if we use Optional class then we dont get data directly , we get data in object format
+
+           ## we write complex logic but forgot basic logic then no use of complex logic
+ 
+
+           -> java.util.Optional class introduced in java 1.8 v.
+
+           -> Optional class is used to avoid NullPointerExceptions in the program
+
+           -> when we perform any operation on null value then we get NullPointerException
+             ex :  userName.toUpperCase();  
+                  here userName is getting null from DB and we perform operation on that user 
+
+           -> getting  NullPointerException is very common in real project
+
+           -> before Optional how developer check NullPointerException
+               ex:
+                  if(userName=null){
+                      String msg = userName.toUpperCase();
+                  }else{
+                      Sysout "Invalid userName"
+                  }
+
+              // but every developer us not a good programmer who can check the null value  , so java people introduce in Optional class to avoid this exception
+            -> In Optional class data is present in Object format , we cannot get direct data 
+
+            -> we need to check first data is present or not then get that data
+
+              isPresent() - to check data is present in Optional object 
+
+              get()       - to get object data and perform the operation
+
+              Note in get() also gives you object data only  
+
+              if(userName.isPresent()){
+                 userName.get();   // object data only
+                 String name = userName.get();
+                 sysout(name.toUpperCase());  // operation is perform
+              }
+
+              Option class   -->   container  --> in this container data is present is present or not(isPresent()) --> if present then get that data (get())
+              -----------
+
+
+              Q) What is the disadvantage if we return data dierctly
+                 => any one developer dont check null exception
+
+
+              Q) what is the advantage if we dont return data directly
+                 => he need to check null exception every time
+
+
+
+
+  ***IMP**    Q) What is NullPointerException
+              =================================
+
+              Ans)  - When we perform some operation on null value then we will get NullPointerException
+
+                    - If we get Exception means our application is abnormally behave
+                    
+                    - To avoid NullPointerException we have to implement null check before performing operation on the Object like below
+
+                          String s = null;
+
+                          s.length()  // NPE
+
+                          if(s! = null){
+                             sysout( s.length);
+                          }
+
+                    note: In the project there is no gaurantee that programmer will implement null checks. If any body forgot to implement null check then program will run into nullPointerException
+
+                          To avoid this problem we need to use Optional class 
+
+
+
+              How to use Option class in method
+              #################################
+
+                 1)   add return type as Optional<String>
+                       generic depends on requirement
+
+                 2)   return => Optional.ofNullable();  
+                     note: this ofNullable() method except parameter which is used to add data into Option class contianer
+
+
+
+                   Example    without Optional class
+                   #########
+
+                   Public class User{
+
+
+                            public String getUserNameById(Integer id){
+
+                               if(id ==100){
+                                 return "Raju";
+                               }else if(id == 101){
+                                 return "Rani";
+                               }else if(id == 102){
+                                 return "John";
+                               }else{
+                                  return null;
+                               }
+                            }
+                     }
+
+
+
+                     public class MsgService{
+
+                         public static void main(String[] args){
+
+                             Scanner s = new Scanner(System.in);
+
+                             Sysyout("Enter user id");
+                             int userId = s.nextInt();
+
+                             User u = new Usr();
+                             String userName= u.getuserNameById(userId);
+                             // here data is get directly 
+
+                             String msg = userName.toUpperCase() +  " , Hello";
+                             // perform operation on data directly id null also operation is perform
+
+                             sysout(msg);
+                         }
+                     }
+
+
+
+
+                    Example    with Optional class
+                    #########
+
+
+
+                     Public class User{
+
+
+                            public Optional<String> getUserNameById(Integer id){
+
+                                String name=null;
+
+                               if(id ==100){
+                                 return "Raju";
+                               }else if(id == 101){
+                                 return "Rani";
+                               }else if(id == 102){
+                                 return "John";
+                               }
+
+                               return Optional.ofNullable(name);
+
+                               this method represent that Optional class can have value or null
+                            }
+                     }
+
+
+                       public class MsgService{
+
+                         public static void main(String[] args){
+
+                             Scanner s = new Scanner(System.in);
+
+                             Sysyout("Enter user id");
+                             int userId = s.nextInt();
+
+                             User u = new User();
+
+                             Optional<String> username =  u.getUserName(userId);
+                             if(userName.isPresent()){
+
+                                 String name=  userName.get();
+                                 Sysout(name.toUpperCase() + "Hello");
+
+                             }else{
+                               sysout("No data found");
+                             }
+                            
+                            
+                         }
+                     }
+
+
+        
+
+
+       
+
+       ###################################
+       Date and Time API Changes in java-8
+       ###################################
+
+
+         
+         
+         => In Java we Have below 2 classes to represent Date
+
+               1) java.util.Date
+               2) java.sql.Date
+
+         => Note : When we are performing database operations then we will use java.sql.Date
+
+         => for normal date related operations we will use java.util.Date class
+
+                  Date d = new Date();
+                  SYsout(d);
+         => Note When we create Object for Date class , it will represent both date and time
+                           
+
+         => if we want to get only date only time then we need to format it using SimpleDateFormat class
+
+         => java.text.SimpleDateFormat
+
+         => SimpleDateFormat is a predefine class in java.text package
+
+         => This class provided method to perform Date conversion
+               format() method --  date to string conversion
+               parse() method  -- string to date conversion
+
+                             upto old 
+         =============================================================
+                            from java 8
+
+
+         => Java new classes for deal with date and time
+         =================================================
+             1) java.time.LocalDate    - only to deal with date
+             2) java.time.LocalTime    - onlt to deal with time
+             3) kava.time.LocalDateTime  - for both date and time
+
+         =============
+          for day  date and year
+          ===========
+
+             Ex: LocalDate date = LocalDate.now();
+                  sysout(date);                     // 2022-19-5
+          
+
+
+             Q) Requirement 
+                  from now next 5 days
+
+                   LocalDate date = LocalDate.now();
+                   sysout(date);
+
+                   date.plusDays(3)      //     2022-24-5
+                   date.plusMonths(3)    //  2022 -24-8
+                   date.plusYears(1)     //   2022 - 24 -5
+
+                LocalTime t - LocalTime
+
+
+
+         
+       
+
+
+         Q) How to convert Date to String and String to date
+         ======================================================
+
+
+                  format() is used to convert date to Stirng
+                  parse() is used to convert String to Date
+
+                  dd/MM/yyyy  ----19/5/2024
+                  date      to     string
+
+                  19/5/2024   -- 
+
+
+
+                   Note: MM -means month in number
+                MMM - means month in 3 letters like Dec
+                MMMM- means December
+
+                yy - 24
+                yyyy  2024
+
+
+
+         Note : Date conversion is very commom requirement
+         $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 
+
+         java.util.Date  class not provide any method to convert from String to Date or vice versa
+
+         to overcome this problem in java 8 Date API changes added  SimpleDateFormat class is introduce
+
+
+
+        Code
+        +++++
+
+           class 
+               main(){
+
+                   SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
+                   String format1 = sd1.format(date);
+                   sysout(format1)     // output 19/5/2024
+
+                   SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/yyyy");
+                   String format2 = sd1.format(date);
+                   sysout(format2)     // output 5/19/2024
+
+                 // Conversion String to date
+
+                   SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd");
+                   Date parseDate = sd3.parse("2022-12-21");
+                   sysout(parseDate)     
+               }
+
+
+
+ 
+
+
+    Note: Upto 13 topics of Java 8 topics complete
+        ##############################################
+
+        1) What are new changes in java 8
+        2) Interface change
+              default methods
+              static methods
+        3) Why Default and static methods introduces in java 8
+        4) Lambda expressions
+        5) How to write Lambda Expression 
+        6) How to invoke lambda expression
+        7) Functional Interface
+        8) Collections Sorting using Lambda
+        9) Thread Creation using Lambda
+        10) Method Refrences and Constructor Refrences
+        11) StringJoiner class  java.util.StringJoiner
+        12) forEach() method
+        13) Optional class    java.util.Optional
+
+
+
+
+
+
+
+ 
+
+
